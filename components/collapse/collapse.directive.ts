@@ -98,6 +98,8 @@ export class CollapseDirective implements OnInit {
 
     this.display = 'none';
     this.collapsed.emit(this);
+		this._renderer.setElementStyle(this._el.nativeElement,'overflow','hidden');
+
 
     /*  setTimeout(() => {
      // this.height = '0';
@@ -135,8 +137,8 @@ export class CollapseDirective implements OnInit {
     // this.height = 'auto';
     this.isCollapse = true;
     this.isCollapsing = false;
-    this._renderer.setElementStyle(this._el.nativeElement, 'overflow', 'visible');
-    this._renderer.setElementStyle(this._el.nativeElement, 'height', 'auto');
+    this._renderer.setElementStyle(this._el.nativeElement, 'overflow', 'hidden');
+    this._renderer.setElementStyle(this._el.nativeElement, 'height', 0);
     this.expanded.emit(this);
     /*setTimeout(() => {
      // this.height = 'auto';

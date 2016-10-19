@@ -1,5 +1,5 @@
 import {
-  Component, HostBinding, Inject, Input, OnDestroy, OnInit
+  Component, animation, transition, style, state, trigger, HostBinding, Inject, Input, OnDestroy, OnInit
 } from '@angular/core';
 
 import { AccordionComponent } from './accordion.component';
@@ -20,13 +20,21 @@ const MouseEvent = (global as any).MouseEvent as MouseEvent;
           </a>
         </h4>
       </div>
-      <div class="panel-collapse collapse" [collapse]="!isOpen">
+      <div class="panel-collapse collapse" [collapse]="!isOpen" (expanded)="expanded($event)" (collapsed)="collapsed($event)" [@expandedState]="expandedState">
         <div class="panel-body">
           <ng-content></ng-content>
         </div>
       </div>
     </div>
-  `
+  `,
+	animations: [
+		trigger('expandedState', [
+			state('closed', style({height: 0})),
+			state('open', style({height: '*'})),
+			transition('closed => open', animate('300ms ease-in')),
+			transition('open => closed', animate('300ms ease-out'))
+		])
+	]
 })
 export class AccordionPanelComponent implements OnInit, OnDestroy {
   @Input() public heading:string;
@@ -36,6 +44,8 @@ export class AccordionPanelComponent implements OnInit, OnDestroy {
   // Questionable, maybe .panel-open should be on child div.panel element?
   @HostBinding('class.panel-open')
   @Input()
+	expandedState:string = "closed";
+
   public get isOpen():boolean {
     return this._isOpen;
   }
@@ -62,6 +72,20 @@ export class AccordionPanelComponent implements OnInit, OnDestroy {
   public ngOnDestroy():any {
     this.accordion.removeGroup(this);
   }
+
+	public expanded(e):void {
+		let _obj = this;
+		setTimeout(() => {
+			_obj.expandedState = 'open';
+		},4);
+	}
+
+	public collapsed(e):void {
+		let _obj = this;
+		setTimeout(() => {
+			_obj.expandedState = 'closed';
+		},4);
+	}
 
   public toggleOpen(event:MouseEvent):any {
     event.preventDefault();
